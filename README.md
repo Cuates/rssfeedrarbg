@@ -9,6 +9,6 @@ Python [rarbg](https://rarbg.to/torrents.php) RSS Feed parser for Movies and TVs
 
 ### Prerequisite Python Modules
 * tkinter
- * `python3 -m pip install tkinter`
+  * `python3 -m pip install tkinter`
 * feedparser
- * `python3 -m pip install feedparser`
+  * `python3 -m pip install feedparser`
