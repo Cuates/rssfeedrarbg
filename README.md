@@ -1,2 +1,2 @@
-# rssfeedrarbg
-rarbg RSS Feed parser for Movies and TVs
+# rssfeedrarbgpy
+rarbg RSS Feed parser for Movies and TVs Python
