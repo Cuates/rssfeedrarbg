@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgclass.py
 #     Created: 03/17/2019
-#     Updated: 03/24/2019
+#     Updated: 03/27/2019
 #  Programmer: Daniel Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: RSS feed Rarbg Class
@@ -210,13 +210,13 @@ class RssFeedRarBgClass:
             hrefURL = ''
 
             # Set pseudo variable
-            pseudoURL = self._mediaSearchURL(mediaType, 'pseudo') + mediaEntries[row]
+            pseudoURL = self._mediaSearchURL(mediaType, 'pseudo') + mediaEntries[row - 1]
 
-            ## Open search url
-            #webbrowser.open(pseudoURL)
+            # Open search url
+            webbrowser.open(pseudoURL)
 
-            # Requests html
-            responseHTML = requests.get(pseudoURL)
+            ## Requests html
+            #responseHTML = requests.get(pseudoURL)
 
             ## Create object of beautiful soup
             #beautifulsoup = bs4.BeautifulSoup(responseHTML, 'html.parser')
@@ -239,69 +239,79 @@ class RssFeedRarBgClass:
 
     # Ignore media action
     def _ignoreMedia(self, mediaType, mediaEntries, row, column):
-        # Initialize variables
+        # Set variable
+        mediaAction = 'Ignore'
+
+        # Set list
         mediaEntryFixed = []
 
         # Try to execute the command(s)
         try:
-            # Create object of rss feed parser rarbg config
-            rfrbgconfig = rssfeedrarbgconfig.RssFeedRarBgConfig()
-
-            # Set variables based on type
-            rfrbgconfig._setFilenameVars(mediaType)
-
-            # Get dictionary of values
-            dictMediaType = rfrbgconfig._getFilenameVars()
-
             # Create to file
-            self._createMediaFile(dictMediaType['filenameIgnore'])
+            self._createMediaFile(mediaType, mediaAction)
 
             # Store value from list
-            mediaEntryFixed = self._splitMediaEntries(mediaType, mediaEntries[row])
+            mediaEntryFixed = self._splitMediaEntries(mediaType, mediaEntries[row - 1])
 
             # Read from file
-            mediaObject = self._readFromMediaFile(dictMediaType['filenameIgnore'])
+            mediaObject = self._readFromMediaFile(mediaType, mediaAction)
 
             # Check if string does not exist in list
             if mediaEntryFixed[0] not in mediaObject:
                 # Append to file
-                self._appendToMediaFile(mediaType, dictMediaType['filenameIgnore'], mediaEntryFixed[0])
-
+                self._appendToMediaFile(mediaType, mediaAction, mediaEntryFixed[0])
         except Exception as e:
             # Set exception error
             print('Issue ignoring ' + mediaType + ' entry: ' + str(e))
 
     # Delete media action
     def _deleteMedia(self, mediaType, mediaEntries, row, column):
+        # Set variable
+        mediaAction = 'Delete'
+
+        # Try to execute the command(s)
+        try:
+            # Create to file
+            self._createMediaFile(mediaType, mediaAction)
+
+            # Read from file
+            mediaObject = self._readFromMediaFile(mediaType, mediaAction)
+
+            # Check if string does not exist in list
+            if mediaEntries[row] not in mediaObject:
+                # Append to file
+                self._appendToMediaFile(mediaType, mediaAction, mediaEntries[row - 1])
+        except Exception as e:
+            # Set exception error
+            print('Issue deleting ' + mediaType + ' entry: ' + str(e))
+
+    # Create to media file
+    def _createMediaFile(self, mediaType, mediaAction):
         # Try to execute the command(s)
         try:
             # Create object of rss feed parser rarbg config
             rfrbgconfig = rssfeedrarbgconfig.RssFeedRarBgConfig()
 
             # Set variables based on type
-            rfrbgconfig._setFilenameVars(mediaType)
+            rfrbgconfig._setFilenameVars(mediaType, mediaAction)
 
             # Get dictionary of values
             dictMediaType = rfrbgconfig._getFilenameVars()
 
-            # Create to file
-            self._createMediaFile(dictMediaType['filenameDelete'])
+            # Set path
+            pathDirectory = dictMediaType['pathParent'] + dictMediaType['pathLevelOne'] + dictMediaType['pathLevelTwo']
 
-            # Read from file
-            mediaObject = self._readFromMediaFile(dictMediaType['filenameDelete'])
+            # Set variable
+            pathResourceFolder = pathlib.Path(pathDirectory)
 
-            # Check if string does not exist in list
-            if mediaEntries[row] not in mediaObject:
-                # Append to file
-                self._appendToMediaFile(mediaType, dictMediaType['filenameDelete'], mediaEntries[row])
-        except Exception as e:
-            # Set exception error
-            print('Issue deleting ' + mediaType + ' entry: ' + str(e))
+            if not pathResourceFolder.exists():
+                # Recursively creates the directory and does not raise an exception if the directory already exist
+                # Parent can be skipped as an argument if not needed or want to create parent directory
+                pathlib.Path(pathResourceFolder).mkdir(parents=True, exist_ok=True)
 
-    # Create to media file
-    def _createMediaFile(self, filename):
-        # Try to execute the command(s)
-        try:
+            # Set file name
+            filename = dictMediaType['pathParent'] + dictMediaType['pathLevelOne'] + dictMediaType['pathLevelTwo'] + dictMediaType['filenameMedia']
+
             # Set variable
             mediaFilename = pathlib.Path(filename)
 
@@ -317,12 +327,24 @@ class RssFeedRarBgClass:
             print('Issue writing to ' + mediaType + ' file: ' + str(e))
 
     # Read from media file
-    def _readFromMediaFile(self, filename):
+    def _readFromMediaFile(self, mediaType, mediaAction):
         # Initialize obj
         mediaObj = []
 
         # Try to execute the command(s)
         try:
+            # Create object of rss feed parser rarbg config
+            rfrbgconfig = rssfeedrarbgconfig.RssFeedRarBgConfig()
+
+            # Set variables based on type
+            rfrbgconfig._setFilenameVars(mediaType, mediaAction)
+
+            # Get dictionary of values
+            dictMediaType = rfrbgconfig._getFilenameVars()
+
+            # Set file name
+            filename = dictMediaType['pathParent'] + dictMediaType['pathLevelOne'] + dictMediaType['pathLevelTwo'] + dictMediaType['filenameMedia']
+
             # Set variable
             mediaFilename = pathlib.Path(filename)
 
@@ -340,9 +362,21 @@ class RssFeedRarBgClass:
         return mediaObj
 
     # Append to media file
-    def _appendToMediaFile(self, mediaType, filename, mediaEntryFixed):
+    def _appendToMediaFile(self, mediaType, mediaAction, mediaEntryFixed):
         # Try to execute the command(s)
         try:
+            # Create object of rss feed parser rarbg config
+            rfrbgconfig = rssfeedrarbgconfig.RssFeedRarBgConfig()
+
+            # Set variables based on type
+            rfrbgconfig._setFilenameVars(mediaType, mediaAction)
+
+            # Get dictionary of values
+            dictMediaType = rfrbgconfig._getFilenameVars()
+
+            # Set file name
+            filename = dictMediaType['pathParent'] + dictMediaType['pathLevelOne'] + dictMediaType['pathLevelTwo'] + dictMediaType['filenameMedia']
+
             # Set variable
             mediaFilename = pathlib.Path(filename)
 
