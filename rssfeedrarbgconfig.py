@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgconfig.py
 #     Created: 03/17/2019
-#     Updated: 03/27/2019
+#     Updated: 03/30/2019
 #  Programmer: Daniel Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: RSS feed Rarbg Configuration
@@ -20,6 +20,10 @@ class RssFeedRarBgConfig:
     _searchEntryURL = None
     _filenameIgnore = None
     _filenameDelete = None
+    _pathParent = None
+    _pathLevelOne = None
+    _pathLevelTwo = None
+    _filenameMedia = None
 
     # Constructor
     def __init__(self):
@@ -41,11 +45,11 @@ class RssFeedRarBgConfig:
             self._torrentSearchURL = 'torrents.php?'
             self._searchEntryURL = '&search='
         else:
-            self._mainURL = None
-            self._rssURL = None
-            self._categoryURL = None
-            self._torrentSearchURL = None
-            self._searchEntryURL = None
+            self._mainURL = ''
+            self._rssURL = ''
+            self._categoryURL = ''
+            self._torrentSearchURL = ''
+            self._searchEntryURL = ''
 
     # Get configuration variable
     def _getConfigVars(self):
@@ -82,19 +86,19 @@ class RssFeedRarBgConfig:
             # Set variables
             self._pathParent = './resource'
             self._pathLevelOne = '/list'
-            self._pathLevelTwo = '/mediaignore'
-            self._filenameMedai = '/mediafeed.txt'
+            self._pathLevelTwo = '/mediafeed'
+            self._filenameMedia = '/mediafeed.txt'
         # Check if media action type is log
         elif regEx.search(r'\bLog\b', mediaAction, flags=regEx.IGNORECASE):
             self._pathParent = './resource'
             self._pathLevelOne = '/log'
-            self._pathLevelTwo = None
-            self._filenameMedia = '/rssrarbgpylog.csv'
+            self._pathLevelTwo = ''
+            self._filenameMedia = '/rssrarbgpy.log'
         else:
-            self._pathParent = None
-            self._pathLevelOne = None
-            self._pathLevelTwo = None
-            self._filenameMedia = None
+            self._pathParent = ''
+            self._pathLevelOne = ''
+            self._pathLevelTwo = ''
+            self._filenameMedia = ''
 
     # Get filename variable
     def _getFilenameVars(self):

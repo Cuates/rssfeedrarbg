@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgclass.py
 #     Created: 03/17/2019
-#     Updated: 03/27/2019
+#     Updated: 03/30/2019
 #  Programmer: Daniel Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: RSS feed Rarbg Class
@@ -16,6 +16,7 @@ import pathlib # path
 import re as regEx # regular expression
 import requests # requests
 import bs4 # beautiful soup
+import logging # logging
 
 # Class
 class RssFeedRarBgClass:
@@ -58,8 +59,12 @@ class RssFeedRarBgClass:
             # Set window background
             self.window.configure(bg=windowBackground)
         except Exception as e:
-            # Set exception error
-            print('Issue setting tkinter window: ' + str(e))
+            # Log string
+            self._setLogger('Issue setting tkinter window: ' + str(e))
+            ## Set exception error
+            #print('Issue setting tkinter window: ' + str(e))
+            #logging.debug('Issue setting tkinter window: %s', str(e))
+
 
     # RSS feed response from given URL
     def _responseFeedParser(self, mediaType):
@@ -83,8 +88,10 @@ class RssFeedRarBgClass:
             # Prepare feed parser
             rssFeedResponse = feedparser.parse(urlFeed)
         except Exception as e:
-            # Set exception error
-            print('Issue with ' + mediaType + ' feed parser: ' + str(e))
+            # Log string
+            self._setLogger('Issue with ' + mediaType + ' feed parser: ' + str(e))
+            ## Set exception error
+            #print('Issue with ' + mediaType + ' feed parser: ' + str(e))
 
         # Return feed response
         return rssFeedResponse
@@ -113,8 +120,10 @@ class RssFeedRarBgClass:
                 # Set variable
                 searchURL = dictMediaType['mainURL']
         except Exception as e:
-            # Set exception error
-            print('Issue with ' + mediaType + ' media search URL: ' + str(e))
+            # Log string
+            self._setLogger('Issue with ' + mediaType + ' media search URL: ' + str(e))
+            ## Set exception error
+            #print('Issue with ' + mediaType + ' media search URL: ' + str(e))
 
         # Return search URL
         return searchURL
@@ -139,8 +148,10 @@ class RssFeedRarBgClass:
                 # Set header row label
                 tkinter.Label(text=textVal, relief=reliefVal, width=widthVal, font=(fontVal, fontWeightVal), bg=bgVal, fg=fgVal).grid(row=rowVal,column=columnVal)
         except Exception as e:
-            # Set exception error
-            print('Issue displaying ' + mediaType + ' header(s): ' + str(e))
+            # Log string
+            self._setLogger('Issue displaying ' + mediaType + ' header(s): ' + str(e))
+            ## Set exception error
+            #print('Issue displaying ' + mediaType + ' header(s): ' + str(e))
 
     # RSS Feed Content Display
     def rssFeedContentDisplay(self, mediaType, rssFeedResponse, dictHeaderRow):
@@ -199,8 +210,10 @@ class RssFeedRarBgClass:
                 # Increment position
                 posVal = posVal + 1
         except Exception as e:
-            # Set exception error
-            print('Issue displaying ' + mediaType + ' content: ' + str(e))
+            # Log string
+            self._setLogger('Issue displaying ' + mediaType + ' content: ' + str(e))
+            ## Set exception error
+            #print('Issue displaying ' + mediaType + ' content: ' + str(e))
 
     # View media action
     def _viewMedia(self, mediaType, mediaEntries, row, column):
@@ -234,8 +247,10 @@ class RssFeedRarBgClass:
             #else:
             #    print('There was an issue retrieving genuine href')
         except Exception as e:
-            # Set exception error
-            print('Issue opening ' + mediaType + ' link: ' + str(e))
+            # Log string
+            self._setLogger('Issue opening ' + mediaType + ' link: ' + str(e))
+            ## Set exception error
+            #print('Issue opening ' + mediaType + ' link: ' + str(e))
 
     # Ignore media action
     def _ignoreMedia(self, mediaType, mediaEntries, row, column):
@@ -261,8 +276,10 @@ class RssFeedRarBgClass:
                 # Append to file
                 self._appendToMediaFile(mediaType, mediaAction, mediaEntryFixed[0])
         except Exception as e:
-            # Set exception error
-            print('Issue ignoring ' + mediaType + ' entry: ' + str(e))
+            # Log string
+            self._setLogger('Issue ignoring ' + mediaType + ' entry: ' + str(e))
+            ## Set exception error
+            #print('Issue ignoring ' + mediaType + ' entry: ' + str(e))
 
     # Delete media action
     def _deleteMedia(self, mediaType, mediaEntries, row, column):
@@ -282,8 +299,10 @@ class RssFeedRarBgClass:
                 # Append to file
                 self._appendToMediaFile(mediaType, mediaAction, mediaEntries[row - 1])
         except Exception as e:
-            # Set exception error
-            print('Issue deleting ' + mediaType + ' entry: ' + str(e))
+            # Log string
+            self._setLogger('Issue deleting ' + mediaType + ' entry: ' + str(e))
+            ## Set exception error
+            #print('Issue deleting ' + mediaType + ' entry: ' + str(e))
 
     # Create to media file
     def _createMediaFile(self, mediaType, mediaAction):
@@ -310,7 +329,7 @@ class RssFeedRarBgClass:
                 pathlib.Path(pathResourceFolder).mkdir(parents=True, exist_ok=True)
 
             # Set file name
-            filename = dictMediaType['pathParent'] + dictMediaType['pathLevelOne'] + dictMediaType['pathLevelTwo'] + dictMediaType['filenameMedia']
+            filename = pathDirectory + dictMediaType['filenameMedia']
 
             # Set variable
             mediaFilename = pathlib.Path(filename)
@@ -323,8 +342,10 @@ class RssFeedRarBgClass:
                 # Close file
                 fhMedia.close()
         except Exception as e:
-            # Set exception error
-            print('Issue writing to ' + mediaType + ' file: ' + str(e))
+            # Log string
+            self._setLogger('Issue writing to ' + mediaType + ' file: ' + str(e))
+            ## Set exception error
+            #print('Issue writing to ' + mediaType + ' file: ' + str(e))
 
     # Read from media file
     def _readFromMediaFile(self, mediaType, mediaAction):
@@ -355,8 +376,10 @@ class RssFeedRarBgClass:
                     # Loop through key, value in enumerate(meidaEntryRead)
                     mediaObj = [line.strip() for line in meidaEntryRead]
         except Exception as e:
-            # Set exception error
-            print('Issue reading from ' + mediaType + ' file: ' + str(e))
+            # Log string
+            self._setLogger('Issue reading from ' + mediaType + ' file: ' + str(e))
+            ## Set exception error
+            #print('Issue reading from ' + mediaType + ' file: ' + str(e))
 
         # Return media object
         return mediaObj
@@ -387,8 +410,10 @@ class RssFeedRarBgClass:
                     # Append media entry into file with proper format
                     mediaEntryAppend.write(mediaEntryFixed + '\n')
         except Exception as e:
-            # Set exception error
-            print('Issue appending to ' + mediaType + ' file: ' + str(e))
+            # Log string
+            self._setLogger('Issue appending to ' + mediaType + ' file: ' + str(e))
+            ## Set exception error
+            #print('Issue appending to ' + mediaType + ' file: ' + str(e))
 
     # Split media entries
     def _splitMediaEntries(self, mediaType, mediaEntry):
@@ -403,13 +428,49 @@ class RssFeedRarBgClass:
                 mediaEntryFixed = regEx.split('.[0-9]{4}.', mediaEntry)
             elif mediaType == 'Television':
                 # Split television string to retrieve the proper title
-                mediaEntryFixed = regEx.split('.[0-9]{4}.', mediaEntry)
+                mediaEntryFixed = regEx.split('.s[0-9]{2,3}', mediaEntry)
         except Exception as e:
-            # Set exception error
-            print('Issue spliting ' + mediaType + ' entries: ' + str(e))
+            # Log string
+            self._setLogger('Issue spliting ' + mediaType + ' entries: ' + str(e))
+            ## Set exception error
+            #print('Issue spliting ' + mediaType + ' entries: ' + str(e))
 
         # Return string
         return mediaEntryFixed
+
+    # Set Logger
+    def _setLogger(self, logString):
+        # Create object of rss feed parser rarbg config
+        rfrbgconfig = rssfeedrarbgconfig.RssFeedRarBgConfig()
+
+        # Set variables based on type
+        rfrbgconfig._setFilenameVars('None', 'Log')
+
+        # Get dictionary of values
+        dictMediaType = rfrbgconfig._getFilenameVars()
+
+        # Set path
+        pathDirectory = dictMediaType['pathParent'] + dictMediaType['pathLevelOne'] + dictMediaType['pathLevelTwo']
+
+        # Set variable
+        pathResourceFolder = pathlib.Path(pathDirectory)
+
+        if not pathResourceFolder.exists():
+            # Recursively creates the directory and does not raise an exception if the directory already exist
+            # Parent can be skipped as an argument if not needed or want to create parent directory
+            pathlib.Path(pathResourceFolder).mkdir(parents=True, exist_ok=True)
+
+        # Set file name
+        logFilename = pathDirectory + dictMediaType['filenameMedia']
+
+        # Configure basic logging
+        logging.basicConfig(filename=logFilename,level=logging.DEBUG, format='%(asctime)s - %(levelname)s:%(levelno)s [%(module)s] [%(pathname)s:%(filename)s:%(lineno)d:%(funcName)s] %(message)s')
+
+        # Log string for debugging
+        logging.debug(logString, exc_info=True)
+
+        ## Set up rotating file hander to logging
+        #fileHandler = logging.handlers.RotatingFileHandler(logFilename, maxBytes=20, backupCount=5)
 
     # Execute main loop
     def initMainLoop(self):
@@ -417,4 +478,7 @@ class RssFeedRarBgClass:
         try:
             self.window.mainloop()
         except Exception as e:
-            print('Issue executing tkinter main loop')
+            # Log string
+            self._setLogger('Issue executing tkinter main loop: ' + str(e))
+            ## Set Exception error
+            #print('Issue executing tkinter main loop')
