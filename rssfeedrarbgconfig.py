@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgconfig.py
 #     Created: 03/17/2019
-#     Updated: 03/30/2019
+#     Updated: 04/03/2019
 #  Programmer: Daniel Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: RSS feed Rarbg Configuration

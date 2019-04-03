@@ -1,21 +1,21 @@
 ##
 #        File: rssfeedrarbg.py
 #     Created: 03/16/2019
-#     Updated: 03/24/2019
+#     Updated: 04/03/2019
 #  Programmer: Guadalupe Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: Retrieve RSS feed from RarBg site
 #     Version: 0.0.1 Python3
 ##
 
+# Import modules
+import rssfeedrarbgclass # rss feed rarbg class
+
+# Set object
+rfrbclass = rssfeedrarbgclass.RssFeedRarBgClass()
+
 # Try to execute the command(s)
 try:
-    # Import modules
-    import rssfeedrarbgclass # rss feed rarbg class
-
-    # Set object
-    rfrbclass = rssfeedrarbgclass.RssFeedRarBgClass()
-
     # Call set tkinter
     rfrbclass._setTkinter('RarBg RSS Feed', '1450', '855', '#000000')
     #rfrbclass._setTkinter('RarBg RSS Feed', '1720x820', '#000000')
@@ -39,4 +39,7 @@ try:
     # Execute tkinter main loop
     rfrbclass.initMainLoop()
 except Exception as e:
-    print('Issue executing main PY file' + str(e))
+    # Log string
+    rfrbclass._setLogger('Issue executing main PY file' + str(e))
+    ## Set Exception error
+    #print('Issue executing main PY file' + str(e))

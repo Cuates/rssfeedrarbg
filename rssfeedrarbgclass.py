@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgclass.py
 #     Created: 03/17/2019
-#     Updated: 03/30/2019
+#     Updated: 04/03/2019
 #  Programmer: Daniel Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: RSS feed Rarbg Class
@@ -17,6 +17,9 @@ import re as regEx # regular expression
 import requests # requests
 import bs4 # beautiful soup
 import logging # logging
+import logging.config # logging configuration
+import json # json
+import sys # system
 
 # Class
 class RssFeedRarBgClass:
@@ -58,13 +61,14 @@ class RssFeedRarBgClass:
 
             # Set window background
             self.window.configure(bg=windowBackground)
+
+            self._setLogger("Main File")
         except Exception as e:
             # Log string
             self._setLogger('Issue setting tkinter window: ' + str(e))
             ## Set exception error
             #print('Issue setting tkinter window: ' + str(e))
             #logging.debug('Issue setting tkinter window: %s', str(e))
-
 
     # RSS feed response from given URL
     def _responseFeedParser(self, mediaType):
@@ -375,6 +379,9 @@ class RssFeedRarBgClass:
                 with open(filename, 'r') as meidaEntryRead:
                     # Loop through key, value in enumerate(meidaEntryRead)
                     mediaObj = [line.strip() for line in meidaEntryRead]
+
+                # Close file
+                meidaEntryRead.close()
         except Exception as e:
             # Log string
             self._setLogger('Issue reading from ' + mediaType + ' file: ' + str(e))
@@ -409,6 +416,9 @@ class RssFeedRarBgClass:
                 with open(filename, 'a+') as mediaEntryAppend:
                     # Append media entry into file with proper format
                     mediaEntryAppend.write(mediaEntryFixed + '\n')
+
+                # Close file
+                mediaEntryAppend.close()
         except Exception as e:
             # Log string
             self._setLogger('Issue appending to ' + mediaType + ' file: ' + str(e))
@@ -463,14 +473,36 @@ class RssFeedRarBgClass:
         # Set file name
         logFilename = pathDirectory + dictMediaType['filenameMedia']
 
-        # Configure basic logging
-        logging.basicConfig(filename=logFilename,level=logging.DEBUG, format='%(asctime)s - %(levelname)s:%(levelno)s [%(module)s] [%(pathname)s:%(filename)s:%(lineno)d:%(funcName)s] %(message)s')
+        # Set variable for JSON configuration
+        logConfigFilename = pathlib.Path('./logging_dictConfig.json')
 
-        # Log string for debugging
-        logging.debug(logString, exc_info=True)
+        # Check if file exists and if file is a file
+        if logConfigFilename.exists() and logConfigFilename.is_file():
+            # Open the file as read
+            with open('./logging_dictConfig.json', 'r') as jsonConfigRead:
+                # Read and set configuration
+                config_dict = json.load(jsonConfigRead)
 
-        ## Set up rotating file hander to logging
-        #fileHandler = logging.handlers.RotatingFileHandler(logFilename, maxBytes=20, backupCount=5)
+            # Close file
+            jsonConfigRead.close()
+
+            # Set configuration based on JSON schema
+            logging.config.dictConfig(config_dict)
+        else:
+            # Configure basic logging
+            logging.basicConfig(filename=logFilename,level=logging.DEBUG, format='%(asctime)s - %(levelname)s:%(levelno)s [%(module)s] [%(pathname)s:%(filename)s:%(lineno)d:%(funcName)s] %(message)s')
+
+        # Set root logger
+        logger = logging.getLogger(__name__)
+
+        # Log string for debugging and provide traceback with exc_info=true
+        #logger.debug(logString, exc_info=True)
+
+        ## Set targeted logger
+        #loggerinfo = logging.getLogger('rssfeedrarbginfo')
+
+        ## Log string for debugging and provide traceback with exc_info=true
+        #loggerinfo.info(logString, exc_info=True)
 
     # Execute main loop
     def initMainLoop(self):
