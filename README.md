@@ -22,3 +22,5 @@ Python [rarbg](https://rarbg.to/torrents.php) RSS Feed parser for Movies and TVs
   * `sudo python3 -m pip install tzlocal`
 * SQLAlchemy
   * `sudo python3 -m pip install SQLAlchemy`
+* Python JSON Logger
+  * `sudo python3 -m pip install python-json-logger`
