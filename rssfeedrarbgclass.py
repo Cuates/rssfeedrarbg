@@ -68,12 +68,104 @@ class RssFeedRarBgClass:
 
             # Set window background
             self.window.configure(bg=windowBackground)
+
+            # Create menu object from window
+            menu = tkinter.Menu(self.window)
+
+            # Create menu object of menu
+            new_item = tkinter.Menu(menu)
+
+            # Add item to menu
+            new_item.add_command(label='Movie', command=self._executeMovie)
+
+            # Add item to menu
+            new_item.add_command(label='Television', command=self._executeTelevision)
+
+            # Add item menu separator
+            new_item.add_separator()
+
+            # Add close item menu
+            new_item.add_command(label='Close', command=self.window.destroy)
+
+            # Add item menu title
+            menu.add_cascade(label='File', menu=new_item)
+
+            # Configure menu
+            self.window.configure(menu=menu)
         except Exception as e:
             # Log string
             self._setLogger('Issue setting tkinter window: ' + str(e))
             ## Set exception error
             #print('Issue setting tkinter window: ' + str(e))
             #logging.debug('Issue setting tkinter window: %s', str(e))
+
+    # Execute Movie
+    def _executeMovie(self):
+        # Loop through all grids in the window
+        for grids in self.window.grid_slaves():
+            # Forget all grids
+            grids.grid_forget()
+
+        # Initialize variables
+        mediaType = 'Movie'
+        databaseName = 'SQLiteRarBG'
+        tableName = 'rarbgmoviefeed'
+
+        # Set dictionary of column header values
+        dictHeaderRow = {0: {'text': mediaType, 'relief': 'ridge', 'width': '80', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '0'},
+        1: {'text': 'Date', 'relief': 'ridge', 'width': '30', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '1'},
+        2: {'text': 'View', 'relief': 'ridge', 'width': '10', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '2'},
+        3: {'text': 'Ignore', 'relief': 'ridge', 'width': '10', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '3'},
+        4: {'text': 'Delete', 'relief': 'ridge', 'width': '10', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '4'}}
+
+        # Display header row(s)
+        self.rssFeedHeaderDisplay(mediaType, dictHeaderRow)
+
+        ## Call set feed parser
+        #rssFeedResponse = rfrbclass._responseFeedParser('Movie')
+
+        ## Display content row(s)
+        #rssFeedResponse = rfrbclass.rssFeedContentDisplay('Movie', rssFeedResponse, dictHeaderRow)
+
+        # Extract record(s) from database
+        databaseResponse = self._extractRecord(databaseName, tableName)
+
+        # Display content row(s)
+        self.databaseContentDisplay(mediaType, databaseName, tableName, databaseResponse, dictHeaderRow)
+
+    # Execute Television
+    def _executeTelevision(self):
+        # Loop through all grids in the window
+        for grids in self.window.grid_slaves():
+            # Forget all grids
+            grids.grid_forget()
+
+        # Initialize variables
+        mediaType = 'Television'
+        databaseName = 'SQLiteRarBG'
+        tableName = 'rarbgtvfeed'
+
+        # Set dictionary of column header values
+        dictHeaderRow = {0: {'text': mediaType, 'relief': 'ridge', 'width': '80', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '0'},
+        1: {'text': 'Date', 'relief': 'ridge', 'width': '30', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '1'},
+        2: {'text': 'View', 'relief': 'ridge', 'width': '10', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '2'},
+        3: {'text': 'Ignore', 'relief': 'ridge', 'width': '10', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '3'},
+        4: {'text': 'Delete', 'relief': 'ridge', 'width': '10', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '4'}}
+
+        # Display header row(s)
+        self.rssFeedHeaderDisplay(mediaType, dictHeaderRow)
+
+        ## Call set feed parser
+        #rssFeedResponse = rfrbclass._responseFeedParser('Movie')
+
+        ## Display content row(s)
+        #rssFeedResponse = rfrbclass.rssFeedContentDisplay('Movie', rssFeedResponse, dictHeaderRow)
+
+        # Extract record(s) from database
+        databaseResponse = self._extractRecord(databaseName, tableName)
+
+        # Display content row(s)
+        self.databaseContentDisplay(mediaType, databaseName, tableName, databaseResponse, dictHeaderRow)
 
     # RSS feed response from given URL
     def _responseFeedParser(self, mediaType):
@@ -211,8 +303,8 @@ class RssFeedRarBgClass:
                 tkinter.Label(text=textTitleVal, relief=reliefTitleVal, width=widthZeroVal, font=(fontZeroVal, fontWeightZeroVal), bg=bgZeroVal, fg=fgZeroVal).grid(row=posVal, column=columnZeroVal)
                 tkinter.Label(text=textPublishedVal, relief=reliefPublishedVal, width=widthOneVal, font=(fontOneVal, fontWeightOneVal), bg=bgOneVal, fg=fgOneVal).grid(row=posVal, column=columnOneVal)
                 tkinter.Button(text='View', width=widthTwoVal, font=(fontTwoVal, fontWeightTwoVal), command=lambda row=posVal: self._viewMediaRecord(mediaType, databaseResponse, row, columnTwoVal)).grid(row=posVal,column=columnTwoVal)
-                tkinter.Button(text='Ignore', width=widthThreeVal, font=(fontThreeVal, fontWeightThreeVal), command=lambda row=posVal: self._mediaIgnoreUpdate(databaseName, tableName, databaseResponse, row, columnTwoVal)).grid(row=posVal,column=columnThreeVal)
-                tkinter.Button(text='Delete', width=widthFourVal, font=(fontFourVal, fontWeightFourVal), command=lambda row=posVal: self._mediaDeleteUpdate(databaseName, tableName, databaseResponse, row, columnTwoVal)).grid(row=posVal,column=columnFourVal)
+                tkinter.Button(text='Ignore', width=widthThreeVal, font=(fontThreeVal, fontWeightThreeVal), command=lambda row=posVal: self._mediaIgnoreUpdate(mediaType, databaseName, tableName, databaseResponse, row, columnTwoVal)).grid(row=posVal,column=columnThreeVal)
+                tkinter.Button(text='Delete', width=widthFourVal, font=(fontFourVal, fontWeightFourVal), command=lambda row=posVal: self._mediaDeleteUpdate(mediaType, databaseName, tableName, databaseResponse, row, columnTwoVal)).grid(row=posVal,column=columnFourVal)
 
                 # Increment position
                 posVal = posVal + 1
@@ -871,7 +963,7 @@ class RssFeedRarBgClass:
         return fetchRecordSNAS
 
     # Ignore Update media
-    def _mediaIgnoreUpdate(self, databaseName, tableName, databaseResponse, row, column):
+    def _mediaIgnoreUpdate(self, mediaType, databaseName, tableName, databaseResponse, row, column):
         try:
             # Extract elements
             titleShortVal = databaseResponse[row - 1][1]
@@ -913,12 +1005,21 @@ class RssFeedRarBgClass:
 
             # Close database connection
             self.connection.close()
+
+            # Check media type
+            if mediaType == 'Movie':
+                # Re execute media feed
+                self._executeMovie()
+            # Check media type
+            elif mediaType == 'Television':
+                # Re execute media feed
+                self._executeTelevision()
         except Exception as e:
             # Log string
             self._setLogger('Issue ignore update media : ' + str(e))
 
     # Delete Update media
-    def _mediaDeleteUpdate(self, databaseName, tableName, databaseResponse, row, column):
+    def _mediaDeleteUpdate(self, mediaType, databaseName, tableName, databaseResponse, row, column):
         try:
             # Extract elements
             titleLongVal = databaseResponse[row - 1][0]
@@ -960,6 +1061,15 @@ class RssFeedRarBgClass:
 
             # Close database connection
             self.connection.close()
+
+            # Check media type
+            if mediaType == 'Movie':
+                # Re execute media feed
+                self._executeMovie()
+            # Check media type
+            elif mediaType == 'Television':
+                # Re execute media feed
+                self._executeTelevision()
         except Exception as e:
             # Log string
             self._setLogger('Issue delete update media : ' + str(e))
