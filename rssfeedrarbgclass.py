@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgclass.py
 #     Created: 03/17/2019
-#     Updated: 04/12/2019
+#     Updated: 04/13/2019
 #  Programmer: Daniel Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: RSS feed Rarbg Class
@@ -95,9 +95,6 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue setting tkinter window: ' + str(e))
-            ## Set exception error
-            #print('Issue setting tkinter window: ' + str(e))
-            #logging.debug('Issue setting tkinter window: %s', str(e))
 
     # Execute Movie
     def _executeMovie(self):
@@ -112,7 +109,7 @@ class RssFeedRarBgClass:
         tableName = 'rarbgmoviefeed'
 
         # Set dictionary of column header values
-        dictHeaderRow = {0: {'text': mediaType, 'relief': 'ridge', 'width': '80', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '0'},
+        dictHeaderRow = {0: {'text': mediaType, 'relief': 'ridge', 'width': '100', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '0'},
         1: {'text': 'Date', 'relief': 'ridge', 'width': '30', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '1'},
         2: {'text': 'View', 'relief': 'ridge', 'width': '10', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '2'},
         3: {'text': 'Ignore', 'relief': 'ridge', 'width': '10', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '3'},
@@ -122,10 +119,10 @@ class RssFeedRarBgClass:
         self.rssFeedHeaderDisplay(mediaType, dictHeaderRow)
 
         ## Call set feed parser
-        #rssFeedResponse = rfrbclass._responseFeedParser('Movie')
+        #rssFeedResponse = self._responseFeedParser('Movie')
 
         ## Display content row(s)
-        #rssFeedResponse = rfrbclass.rssFeedContentDisplay('Movie', rssFeedResponse, dictHeaderRow)
+        #rssFeedResponse = self.rssFeedContentDisplay('Movie', rssFeedResponse, dictHeaderRow)
 
         # Extract record(s) from database
         databaseResponse = self._extractRecord(databaseName, tableName)
@@ -146,7 +143,7 @@ class RssFeedRarBgClass:
         tableName = 'rarbgtvfeed'
 
         # Set dictionary of column header values
-        dictHeaderRow = {0: {'text': mediaType, 'relief': 'ridge', 'width': '80', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '0'},
+        dictHeaderRow = {0: {'text': mediaType, 'relief': 'ridge', 'width': '100', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '0'},
         1: {'text': 'Date', 'relief': 'ridge', 'width': '30', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '1'},
         2: {'text': 'View', 'relief': 'ridge', 'width': '10', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '2'},
         3: {'text': 'Ignore', 'relief': 'ridge', 'width': '10', 'font': 'Arial Bold', 'fontWeight': '12', 'bg': '#000000', 'fg': '#FFFFFF', 'row': '0', 'col': '3'},
@@ -156,10 +153,10 @@ class RssFeedRarBgClass:
         self.rssFeedHeaderDisplay(mediaType, dictHeaderRow)
 
         ## Call set feed parser
-        #rssFeedResponse = rfrbclass._responseFeedParser('Movie')
+        #rssFeedResponse = self._responseFeedParser('Television')
 
         ## Display content row(s)
-        #rssFeedResponse = rfrbclass.rssFeedContentDisplay('Movie', rssFeedResponse, dictHeaderRow)
+        #rssFeedResponse = self.rssFeedContentDisplay('Television', rssFeedResponse, dictHeaderRow)
 
         # Extract record(s) from database
         databaseResponse = self._extractRecord(databaseName, tableName)
@@ -191,8 +188,6 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue with ' + mediaType + ' feed parser: ' + str(e))
-            ## Set exception error
-            #print('Issue with ' + mediaType + ' feed parser: ' + str(e))
 
         # Return feed response
         return rssFeedResponse
@@ -223,8 +218,6 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue with ' + mediaType + ' media search URL: ' + str(e))
-            ## Set exception error
-            #print('Issue with ' + mediaType + ' media search URL: ' + str(e))
 
         # Return search URL
         return searchURL
@@ -251,8 +244,6 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue displaying ' + mediaType + ' header(s): ' + str(e))
-            ## Set exception error
-            #print('Issue displaying ' + mediaType + ' header(s): ' + str(e))
 
     # Database Content Display
     def databaseContentDisplay(self, mediaType, databaseName, tableName, databaseResponse, dictHeaderRow):
@@ -311,8 +302,6 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue displaying database ' + mediaType + ' content: ' + str(e))
-            ## Set exception error
-            #print('Issue displaying ' + mediaType + ' content: ' + str(e))
 
     # RSS Feed Content Display
     def rssFeedContentDisplay(self, mediaType, rssFeedResponse, dictHeaderRow):
@@ -373,8 +362,6 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue displaying ' + mediaType + ' content: ' + str(e))
-            ## Set exception error
-            #print('Issue displaying ' + mediaType + ' content: ' + str(e))
 
     # View media action
     def _viewMedia(self, mediaType, mediaEntries, row, column):
@@ -410,8 +397,6 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue opening ' + mediaType + ' link: ' + str(e))
-            ## Set exception error
-            #print('Issue opening ' + mediaType + ' link: ' + str(e))
 
     # Ignore media action
     def _ignoreMedia(self, mediaType, mediaEntries, row, column):
@@ -439,8 +424,6 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue ignoring ' + mediaType + ' entry: ' + str(e))
-            ## Set exception error
-            #print('Issue ignoring ' + mediaType + ' entry: ' + str(e))
 
     # Delete media action
     def _deleteMedia(self, mediaType, mediaEntries, row, column):
@@ -462,8 +445,6 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue deleting ' + mediaType + ' entry: ' + str(e))
-            ## Set exception error
-            #print('Issue deleting ' + mediaType + ' entry: ' + str(e))
 
     # Create to media file
     def _createMediaFile(self, mediaType, mediaAction):
@@ -505,8 +486,6 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue writing to ' + mediaType + ' file: ' + str(e))
-            ## Set exception error
-            #print('Issue writing to ' + mediaType + ' file: ' + str(e))
 
     # Read from media file
     def _readFromMediaFile(self, mediaType, mediaAction):
@@ -542,8 +521,6 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue reading from ' + mediaType + ' file: ' + str(e))
-            ## Set exception error
-            #print('Issue reading from ' + mediaType + ' file: ' + str(e))
 
         # Return media object
         return mediaObj
@@ -579,8 +556,6 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue appending to ' + mediaType + ' file: ' + str(e))
-            ## Set exception error
-            #print('Issue appending to ' + mediaType + ' file: ' + str(e))
 
     # Split media entries
     def _splitMediaEntries(self, mediaType, mediaEntry):
@@ -599,8 +574,6 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue spliting ' + mediaType + ' entries: ' + str(e))
-            ## Set exception error
-            #print('Issue spliting ' + mediaType + ' entries: ' + str(e))
 
         # Return string
         return mediaEntryFixed
@@ -656,13 +629,6 @@ class RssFeedRarBgClass:
 
         # Log string for debugging and provide traceback with exc_info=true
         logger.debug(logString, exc_info=True)
-        #logger.info(logString)
-
-        ## Set targeted logger
-        #loggerinfo = logging.getLogger('rssfeedrarbginfo')
-
-        ## Log string for debugging and provide traceback with exc_info=true
-        #loggerinfo.info(logString, exc_info=True)
 
     # Decorator style event listens for any connection
     # Need the at symbol in front of the event parameter as this is the only way it will work for listens_for function
@@ -1110,5 +1076,3 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue executing tkinter main loop: ' + str(e))
-            ## Set Exception error
-            #print('Issue executing tkinter main loop')

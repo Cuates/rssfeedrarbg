@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgmovie.py
 #     Created: 04/11/2019
-#     Updated: 04/12/2019
+#     Updated: 04/13/2019
 #  Programmer: Guadalupe Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: Retrieve RSS feed from Rarbg site
@@ -30,7 +30,7 @@ def main():
         # Process all feed information one at a time
         for feedInformation in rssFeedResponse.entries:
             rssfeedtitle = feedInformation.title
-            titlearray = re.split(r'.s[0-9]{2,3}.', rssfeedtitle, flags=re.IGNORECASE)
+            titlearray = re.split(r'.[0-9]{4}.', rssfeedtitle, flags=re.IGNORECASE)
             rssfeedtitleshort = titlearray[0]
             rssfeedpublish = feedInformation.published
 

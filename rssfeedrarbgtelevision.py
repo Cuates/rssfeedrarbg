@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgtelevision.py
 #     Created: 04/11/2019
-#     Updated: 04/12/2019
+#     Updated: 04/13/2019
 #  Programmer: Guadalupe Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: Retrieve RSS feed from Rarbg site

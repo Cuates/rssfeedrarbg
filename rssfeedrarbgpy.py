@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbg.py
 #     Created: 03/16/2019
-#     Updated: 04/12/2019
+#     Updated: 04/13/2019
 #  Programmer: Guadalupe Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: Retrieve RSS feed from RarBg site
@@ -43,19 +43,13 @@ def main():
         rfrbclass._actionStatusReg('SQLiteRarBG', 'actionstatus', 2, 'Delete', currentDateTime, currentDateTime)
 
         # Call set tkinter
-        rfrbclass._setTkinter('RarBg RSS Feed', '1450', '855', '#000000')
-        #rfrbclass._setTkinter('RarBg RSS Feed', '1720x820', '#000000')
+        rfrbclass._setTkinter('RarBg RSS Feed', '1675', '855', '#000000')
 
         # Execute tkinter main loop
         rfrbclass.initMainLoop()
     except Exception as e:
         # Log string
         rfrbclass._setLogger('Issue executing main PY file ' + str(e))
-        ## Set Exception error
-        #print('Issue executing main PY file' + str(e))
-    #except ImportError as e:
-    #    # Log string
-    #    rfrbclass._setLogger('Import Error ' + str(e))
 
 # Run program
 if __name__ == '__main__':

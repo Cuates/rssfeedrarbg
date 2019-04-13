@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgconfig.py
 #     Created: 03/17/2019
-#     Updated: 04/07/2019
+#     Updated: 04/13/2019
 #  Programmer: Daniel Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: RSS feed Rarbg Configuration
@@ -134,7 +134,8 @@ class RssFeedRarBgConfig:
                 self._pathParent = './resource'
                 self._pathLevelOne = '/database'
                 self._pathLevelTwo = ''
-                self._pathDB = '/mediaRSSFeed.sqlite3'
+                #self._pathDB = '/mediaRSSFeed.sqlite3'
+                self._pathDB = '/medialisttest.sqlite3'
                 self._database = self._pathParent  + self._pathLevelOne + self._pathLevelTwo + self._pathDB
                 self._username = ''
                 self._password = ''
@@ -161,7 +162,8 @@ class RssFeedRarBgConfig:
                 self._pathParent = './resource'
                 self._pathLevelOne = '/database'
                 self._pathLevelTwo = ''
-                self._pathDB = '/mediaRSSFeed.sqlite3'
+                #self._pathDB = '/mediaRSSFeed.sqlite3'
+                self._pathDB = '/medialisttest.sqlite3'
                 self._database = self._driver + self._pathParent  + self._pathLevelOne + self._pathLevelTwo + self._pathDB
                 self._username = ''
                 self._password = ''
