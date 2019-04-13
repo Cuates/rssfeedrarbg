@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgclass.py
 #     Created: 03/17/2019
-#     Updated: 04/07/2019
+#     Updated: 04/12/2019
 #  Programmer: Daniel Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: RSS feed Rarbg Class
@@ -24,6 +24,9 @@ import datetime # datetime
 import pytz # pytz
 import tzlocal # tz local
 import sqlalchemy # sqlalchemy
+from sqlalchemy import event # sqlalchemy event
+import pythonjsonlogger # python json logger
+import sqlite3 # sqlite3
 
 # Class
 class RssFeedRarBgClass:
@@ -158,6 +161,66 @@ class RssFeedRarBgClass:
             self._setLogger('Issue displaying ' + mediaType + ' header(s): ' + str(e))
             ## Set exception error
             #print('Issue displaying ' + mediaType + ' header(s): ' + str(e))
+
+    # Database Content Display
+    def databaseContentDisplay(self, mediaType, databaseName, tableName, databaseResponse, dictHeaderRow):
+        # Initialize variables
+        posVal = 1
+
+        # Initialize media array
+        mediaEntries = []
+
+        # Try to execute the command(s)
+        try:
+            # Set variables from dictionary
+            reliefTitleVal = dictHeaderRow[0]['relief']
+            reliefPublishedVal = dictHeaderRow[1]['relief']
+            widthZeroVal = dictHeaderRow[0]['width']
+            widthOneVal = dictHeaderRow[1]['width']
+            widthTwoVal = dictHeaderRow[2]['width']
+            widthThreeVal = dictHeaderRow[3]['width']
+            widthFourVal = dictHeaderRow[4]['width']
+            fontZeroVal = dictHeaderRow[0]['font']
+            fontOneVal = dictHeaderRow[1]['font']
+            fontTwoVal = dictHeaderRow[2]['font']
+            fontThreeVal = dictHeaderRow[3]['font']
+            fontFourVal = dictHeaderRow[4]['font']
+            fontWeightZeroVal = dictHeaderRow[0]['fontWeight']
+            fontWeightOneVal = dictHeaderRow[1]['fontWeight']
+            fontWeightTwoVal = dictHeaderRow[2]['fontWeight']
+            fontWeightThreeVal = dictHeaderRow[3]['fontWeight']
+            fontWeightFourVal = dictHeaderRow[4]['fontWeight']
+            bgZeroVal = dictHeaderRow[0]['bg']
+            bgOneVal = dictHeaderRow[1]['bg']
+            fgZeroVal = dictHeaderRow[0]['fg']
+            fgOneVal = dictHeaderRow[1]['fg']
+            columnZeroVal = dictHeaderRow[0]['col']
+            columnOneVal = dictHeaderRow[1]['col']
+            columnTwoVal = dictHeaderRow[2]['col']
+            columnThreeVal = dictHeaderRow[3]['col']
+            columnFourVal = dictHeaderRow[4]['col']
+            
+            # Loop through dictionary values to create header row
+            for content in databaseResponse:
+                # Set variables from dictionary
+                textTitleVal = content[0]
+                textTitleShortVal = content[1]
+                textPublishedVal = content[2]
+
+                # Set label to display the title
+                tkinter.Label(text=textTitleVal, relief=reliefTitleVal, width=widthZeroVal, font=(fontZeroVal, fontWeightZeroVal), bg=bgZeroVal, fg=fgZeroVal).grid(row=posVal, column=columnZeroVal)
+                tkinter.Label(text=textPublishedVal, relief=reliefPublishedVal, width=widthOneVal, font=(fontOneVal, fontWeightOneVal), bg=bgOneVal, fg=fgOneVal).grid(row=posVal, column=columnOneVal)
+                tkinter.Button(text='View', width=widthTwoVal, font=(fontTwoVal, fontWeightTwoVal), command=lambda row=posVal: self._viewMediaRecord(mediaType, databaseResponse, row, columnTwoVal)).grid(row=posVal,column=columnTwoVal)
+                tkinter.Button(text='Ignore', width=widthThreeVal, font=(fontThreeVal, fontWeightThreeVal), command=lambda row=posVal: self._mediaIgnoreUpdate(databaseName, tableName, databaseResponse, row, columnTwoVal)).grid(row=posVal,column=columnThreeVal)
+                tkinter.Button(text='Delete', width=widthFourVal, font=(fontFourVal, fontWeightFourVal), command=lambda row=posVal: self._mediaDeleteUpdate(databaseName, tableName, databaseResponse, row, columnTwoVal)).grid(row=posVal,column=columnFourVal)
+
+                # Increment position
+                posVal = posVal + 1
+        except Exception as e:
+            # Log string
+            self._setLogger('Issue displaying database ' + mediaType + ' content: ' + str(e))
+            ## Set exception error
+            #print('Issue displaying ' + mediaType + ' content: ' + str(e))
 
     # RSS Feed Content Display
     def rssFeedContentDisplay(self, mediaType, rssFeedResponse, dictHeaderRow):
@@ -509,6 +572,24 @@ class RssFeedRarBgClass:
         ## Log string for debugging and provide traceback with exc_info=true
         #loggerinfo.info(logString, exc_info=True)
 
+    # Decorator style event listens for any connection
+    # Need the at symbol in front of the event parameter as this is the only way it will work for listens_for function
+    @event.listens_for(sqlalchemy.engine.Engine, 'connect')
+
+    # Set a protect function to handle the connection with two parameters
+    def _set_sqlite_pragma(dbapi_connection, connection_record):
+        # Check if the connection is a sqlite connection instance
+        if isinstance(dbapi_connection, sqlite3.Connection):
+
+            # Set the cursor to the connection
+            cursor = dbapi_connection.cursor()
+
+            # Set foreign key to on
+            cursor.execute("PRAGMA foreign_keys=ON;")
+
+            # Close the connection
+            cursor.close()
+
     # Open connection based on type
     def __dbOpenConnection(self, type = 'notype'):
         # Create empty dictionary
@@ -645,8 +726,8 @@ class RssFeedRarBgClass:
             # Set variable query
             query = sqlalchemy.select([actionStatusTable.c.actionnumber, actionStatusTable.c.actiondescription, actionStatusTable.c.createddate, actionStatusTable.c.modifieddate]).where(actionStatusTable.c.actionnumber == actionNumberVal).order_by(sqlalchemy.desc(actionStatusTable.c.actionnumber)).limit(1)
 
-            # Print query with values
-            print(query.compile(compile_kwargs={"literal_binds": True}))
+            ## Print query with values
+            #print(query.compile(compile_kwargs={"literal_binds": True}))
 
             # Execute query
             result = self.connection.execute(query)
@@ -659,8 +740,8 @@ class RssFeedRarBgClass:
                 # Set query insert
                 queryInsert = actionStatusTable.insert(None).values(actionnumber = actionNumberVal, actiondescription = actionDescriptionVal, createddate = createdDateVal, modifieddate = modifiedDateVal)
 
-                # Print query with values
-                print(queryInsert.compile(compile_kwargs={"literal_binds": True}))
+                ## Print query with values
+                #print(queryInsert.compile(compile_kwargs={"literal_binds": True}))
 
                 # Insert record
                 self.connection.execute(queryInsert)
@@ -686,8 +767,8 @@ class RssFeedRarBgClass:
             # Set variable query based on short name and action status
             querySNAS = sqlalchemy.select([mediaTable.c.titlelong, mediaTable.c.titleshort, mediaTable.c.publishdate, mediaTable.c.actionstatus]).where(sqlalchemy.and_(mediaTable.c.titleshort == titleShortVal, mediaTable.c.actionstatus == 1))
 
-            # Print query with values
-            print(querySNAS.compile(compile_kwargs={"literal_binds": True}))
+            ## Print query with values
+            #print(querySNAS.compile(compile_kwargs={"literal_binds": True}))
 
             # Execute query
             resultSNAS = self.connection.execute(querySNAS)
@@ -700,8 +781,8 @@ class RssFeedRarBgClass:
                 # Select based on long name
                 queryLN = sqlalchemy.select([mediaTable.c.titlelong, mediaTable.c.titleshort, mediaTable.c.publishdate, mediaTable.c.actionstatus]).where(mediaTable.c.titlelong == titleLongVal)
 
-                # Print query with values
-                print(queryLN.compile(compile_kwargs={"literal_binds": True}))
+                ## Print query with values
+                #print(queryLN.compile(compile_kwargs={"literal_binds": True}))
 
                 # Execute query
                 resultLN = self.connection.execute(queryLN)
@@ -714,8 +795,8 @@ class RssFeedRarBgClass:
                     # Set query insert
                     queryInsert = mediaTable.insert(None).values(titlelong = titleLongVal, titleshort = titleShortVal, publishdate = publishDateVal, actionstatus = actionStatusVal, createddate = createdDateVal, modifieddate = modifiedDateVal)
 
-                    # Print query with values
-                    print(queryInsert.compile(compile_kwargs={"literal_binds": True}))
+                    ## Print query with values
+                    #print(queryInsert.compile(compile_kwargs={"literal_binds": True}))
 
                     # Insert record
                     self.connection.execute(queryInsert)
@@ -726,9 +807,75 @@ class RssFeedRarBgClass:
             # Log string
             self._setLogger('Issue inserting media : ' + str(e))
 
-    # Ignore Update media
-    def _mediaIgnoreUpdate(self, databaseName, tableName, titleLongVal, titleShortVal, publishDateVal, actionStatusVal, createdDateVal, modifiedDateVal):
+    # View media action
+    def _viewMediaRecord(self, mediaType, databaseResponse, row, column):
+        # Try to execute the command(s)
         try:
+            # Intialize variable
+            hrefURL = ''
+
+            # Set pseudo variable
+            pseudoURL = self._mediaSearchURL(mediaType, 'pseudo') + databaseResponse[row - 1][0]
+
+            # Open search url
+            webbrowser.open(pseudoURL)
+
+            ## Requests html
+            #responseHTML = requests.get(pseudoURL)
+
+            ## Create object of beautiful soup
+            #beautifulsoup = bs4.BeautifulSoup(responseHTML, 'html.parser')
+
+            ## Find tag title with string
+            #urlTitle = beautiful.find(title=mediaEntries[row])
+
+            ## Check if name title is None
+            #if urlTitle != None:
+            #    # Set genuine url
+            #    genuineURL = self._mediaSearchURL(mediaType, 'genuine') + urlTitle.get('href')[1:]
+
+            #    # Open search url
+            #    webbrowser.open(genuineURL)
+            #else:
+            #    print('There was an issue retrieving genuine href')
+        except Exception as e:
+            # Log string
+            self._setLogger('Issue opening ' + mediaType + ' link: ' + str(e))
+            ## Set exception error
+            #print('Issue opening ' + mediaType + ' link: ' + str(e))
+
+    # Select records
+    def _extractRecord(self, dbType, tableName):
+        # Open database connection
+        self.__dbOpenConnection(dbType)
+        ##HERE
+        # Set meta data based on engine
+        metadata = sqlalchemy.MetaData(self.engine)
+
+        # Set variable with table schema
+        mediaTable = sqlalchemy.Table(tableName, metadata, autoload = True, autoload_with = self.engine)
+
+        # Set variable query based on short name and action status
+        querySNAS = sqlalchemy.select([mediaTable.c.titlelong, mediaTable.c.titleshort, mediaTable.c.publishdate]).where(sqlalchemy.and_(mediaTable.c.actionstatus == 0))
+
+        ## Print query with values
+        #print(querySNAS.compile(compile_kwargs={"literal_binds": True}))
+
+        # Execute query
+        resultSNAS = self.connection.execute(querySNAS)
+
+        # Fetch record
+        fetchRecordSNAS = resultSNAS.fetchall()
+
+        # Return records
+        return fetchRecordSNAS
+
+    # Ignore Update media
+    def _mediaIgnoreUpdate(self, databaseName, tableName, databaseResponse, row, column):
+        try:
+            # Extract elements
+            titleShortVal = databaseResponse[row - 1][1]
+
             # Open database connection
             self.__dbOpenConnection(databaseName)
 
@@ -739,10 +886,10 @@ class RssFeedRarBgClass:
             mediaTable = sqlalchemy.Table(tableName, metadata, autoload = True, autoload_with = self.engine)
 
             # Set variable query based on short name
-            querySN = sqlalchemy.select([mediaTable.c.titlelong, mediaTable.c.titleshort, mediaTable.c.publishdate, mediaTable.c.actionstatus]).where(mediaTable.c.titleshort == titleShortVal).limit(1)
+            querySN = sqlalchemy.select([mediaTable.c.titlelong, mediaTable.c.titleshort, mediaTable.c.actionstatus]).where(mediaTable.c.titleshort == titleShortVal).limit(1)
 
-            # Print query with values
-            print(querySN.compile(compile_kwargs={"literal_binds": True}))
+            ## Print query with values
+            #print(querySN.compile(compile_kwargs={"literal_binds": True}))
 
             # Execute query
             resultSN = self.connection.execute(querySN)
@@ -752,11 +899,14 @@ class RssFeedRarBgClass:
 
             # Check if record exist
             if fetchRecordSN is not None:
-                # Set query update
-                queryUpdate = sqlalchemy.update(mediaTable).values(titlelong = titleLongVal, titleshort = titleShortVal, publishdate = publishDateVal, actionstatus = actionStatusVal, createddate = createdDateVal, modifieddate = modifiedDateVal).where(sqlalchemy.and_(mediaTable.c.titleshort == titleShortVal, mediaTable.c.actionstatus != actionStatusVal))
+                # Set variable current date
+                modifiedDateVal = str(datetime.datetime.strptime(str(pytz.utc.localize(datetime.datetime.utcnow()).astimezone(pytz.timezone(str(tzlocal.get_localzone())))), '%Y-%m-%d %H:%M:%S.%f%z').strftime('%Y-%m-%d %H:%M:%S'))
 
-                # Print query with values
-                print(queryUpdate.compile(compile_kwargs={"literal_binds": True}))
+                # Set query update
+                queryUpdate = sqlalchemy.update(mediaTable).values(actionstatus = 1, modifieddate = modifiedDateVal).where(sqlalchemy.and_(mediaTable.c.titleshort == titleShortVal, mediaTable.c.actionstatus != 1))
+
+                ## Print query with values
+                #print(queryUpdate.compile(compile_kwargs={"literal_binds": True}))
 
                 # Insert record
                 self.connection.execute(queryUpdate)
@@ -768,8 +918,11 @@ class RssFeedRarBgClass:
             self._setLogger('Issue ignore update media : ' + str(e))
 
     # Delete Update media
-    def _mediaDeleteUpdate(self, databaseName, tableName, titleLongVal, titleShortVal, publishDateVal, actionStatusVal, createdDateVal, modifiedDateVal):
+    def _mediaDeleteUpdate(self, databaseName, tableName, databaseResponse, row, column):
         try:
+            # Extract elements
+            titleLongVal = databaseResponse[row - 1][0]
+
             # Open database connection
             self.__dbOpenConnection(databaseName)
 
@@ -780,10 +933,10 @@ class RssFeedRarBgClass:
             mediaTable = sqlalchemy.Table(tableName, metadata, autoload = True, autoload_with = self.engine)
 
             # Set variable query based on short name
-            querySN = sqlalchemy.select([mediaTable.c.titlelong, mediaTable.c.titleshort, mediaTable.c.publishdate, mediaTable.c.actionstatus]).where(mediaTable.c.titlelong == titleLongVal).limit(1)
+            querySN = sqlalchemy.select([mediaTable.c.titlelong, mediaTable.c.titleshort, mediaTable.c.actionstatus]).where(mediaTable.c.titlelong == titleLongVal).limit(1)
 
-            # Print query with values
-            print(querySN.compile(compile_kwargs={"literal_binds": True}))
+            ## Print query with values
+            #print(querySN.compile(compile_kwargs={"literal_binds": True}))
 
             # Execute query
             resultSN = self.connection.execute(querySN)
@@ -793,11 +946,14 @@ class RssFeedRarBgClass:
 
             # Check if record exist
             if fetchRecordSN is not None:
-                # Set query update
-                queryUpdate = sqlalchemy.update(mediaTable).values(titlelong = titleLongVal, titleshort = titleShortVal, publishdate = publishDateVal, actionstatus = actionStatusVal, createddate = createdDateVal, modifieddate = modifiedDateVal).where(mediaTable.c.titlelong == titleLongVal)
+                # Set variable current date
+                modifiedDateVal = str(datetime.datetime.strptime(str(pytz.utc.localize(datetime.datetime.utcnow()).astimezone(pytz.timezone(str(tzlocal.get_localzone())))), '%Y-%m-%d %H:%M:%S.%f%z').strftime('%Y-%m-%d %H:%M:%S'))
 
-                # Print query with values
-                print(queryUpdate.compile(compile_kwargs={"literal_binds": True}))
+                # Set query update
+                queryUpdate = sqlalchemy.update(mediaTable).values(actionstatus = 2, modifieddate = modifiedDateVal).where(mediaTable.c.titlelong == titleLongVal)
+
+                ## Print query with values
+                #print(queryUpdate.compile(compile_kwargs={"literal_binds": True}))
 
                 # Insert record
                 self.connection.execute(queryUpdate)
@@ -807,6 +963,34 @@ class RssFeedRarBgClass:
         except Exception as e:
             # Log string
             self._setLogger('Issue delete update media : ' + str(e))
+
+    # Extract URL
+    def extractRSSFeed(self, mediaType):
+        # Initialize variable
+        feedList = []
+
+        # Try to execute the command(s)
+        try:
+            # Create object of rss feed parser rarbg config
+            rfrbgconfig = rssfeedrarbgconfig.RssFeedRarBgConfig()
+
+            # Set variables based on type
+            rfrbgconfig._setConfigVars(mediaType)
+
+            # Get dictionary of values
+            dictMediaType = rfrbgconfig._getConfigVars()
+
+            # Set file name
+            urlString = dictMediaType['mainURL'] + dictMediaType['rssURL'] + dictMediaType['categoryURL']
+
+            # Pull RSS feed from given URL
+            feedList = feedparser.parse(urlString)
+        except Exception as e:
+            # Log string
+            self._setLogger('Issue extract RSS feed ' + mediaType + ' ' + str(e))
+
+        # Return built URL string
+        return feedList
 
     # Execute main loop
     def initMainLoop(self):

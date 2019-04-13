@@ -48,7 +48,7 @@ class RssFeedRarBgConfig:
         elif regEx.search(r'\bTelevision\b', mediaType, flags=regEx.IGNORECASE):
             self._mainURL = 'https://rarbg.to/'
             self._rssURL = 'rssdd.php?'
-            self._categoryURL = 'rssdd.php?categories=41;49'
+            self._categoryURL = 'category=41;49'
             self._torrentSearchURL = 'torrents.php?'
             self._searchEntryURL = '&search='
         else:
