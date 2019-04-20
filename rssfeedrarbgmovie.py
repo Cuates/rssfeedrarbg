@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgmovie.py
 #     Created: 04/11/2019
-#     Updated: 04/13/2019
+#     Updated: 04/20/2019
 #  Programmer: Guadalupe Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: Retrieve RSS feed from Rarbg site
@@ -29,9 +29,17 @@ def main():
 
         # Process all feed information one at a time
         for feedInformation in rssFeedResponse.entries:
+            # Store title
             rssfeedtitle = feedInformation.title
+
+            # Split string based on regular expression
+            # r is to escape any back slashes within the regular expression string
             titlearray = re.split(r'.[0-9]{4}.', rssfeedtitle, flags=re.IGNORECASE)
+
+            # Store title extracted
             rssfeedtitleshort = titlearray[0]
+
+            # Store published date
             rssfeedpublish = feedInformation.published
 
             # Filter year

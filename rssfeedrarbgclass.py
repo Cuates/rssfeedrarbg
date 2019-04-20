@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgclass.py
 #     Created: 03/17/2019
-#     Updated: 04/13/2019
+#     Updated: 04/20/2019
 #  Programmer: Daniel Ojeda
 #  Updated By: Daniel Ojeda
 #     Purpose: RSS feed Rarbg Class
@@ -250,8 +250,8 @@ class RssFeedRarBgClass:
         # Initialize variables
         posVal = 1
 
-        # Initialize media array
-        mediaEntries = []
+        ## Initialize media array
+        #mediaEntries = []
 
         # Try to execute the command(s)
         try:
@@ -478,7 +478,7 @@ class RssFeedRarBgClass:
 
             # Check if file does not exists or if file is not a file
             if not mediaFilename.exists() or not mediaFilename.is_file():
-                # Open file in write mode
+                # Open file for reading and writing which will empty file or create if not exist
                 fhMedia = open(filename, 'w+')
 
                 # Close file
@@ -503,17 +503,29 @@ class RssFeedRarBgClass:
             # Get dictionary of values
             dictMediaType = rfrbgconfig._getFilenameVars()
 
+            # Set path
+            pathDirectory = dictMediaType['pathParent'] + dictMediaType['pathLevelOne'] + dictMediaType['pathLevelTwo']
+
+            # Set variable
+            pathResourceFolder = pathlib.Path(pathDirectory)
+
+            if not pathResourceFolder.exists():
+                # Recursively creates the directory and does not raise an exception if the directory already exist
+                # Parent can be skipped as an argument if not needed or want to create parent directory
+                pathlib.Path(pathResourceFolder).mkdir(parents=True, exist_ok=True)
+
             # Set file name
-            filename = dictMediaType['pathParent'] + dictMediaType['pathLevelOne'] + dictMediaType['pathLevelTwo'] + dictMediaType['filenameMedia']
+            filename = pathDirectory + dictMediaType['filenameMedia']
 
             # Set variable
             mediaFilename = pathlib.Path(filename)
 
             # Check if file exists and if file is a file
             if mediaFilename.exists() and mediaFilename.is_file():
-                # Open the file as read
+                # Open file file to read
                 with open(filename, 'r') as meidaEntryRead:
                     # Loop through key, value in enumerate(meidaEntryRead)
+                    # strip applied to remove end of line characters
                     mediaObj = [line.strip() for line in meidaEntryRead]
 
                 # Close file
@@ -538,15 +550,26 @@ class RssFeedRarBgClass:
             # Get dictionary of values
             dictMediaType = rfrbgconfig._getFilenameVars()
 
+            # Set path
+            pathDirectory = dictMediaType['pathParent'] + dictMediaType['pathLevelOne'] + dictMediaType['pathLevelTwo']
+
+            # Set variable
+            pathResourceFolder = pathlib.Path(pathDirectory)
+
+            if not pathResourceFolder.exists():
+                # Recursively creates the directory and does not raise an exception if the directory already exist
+                # Parent can be skipped as an argument if not needed or want to create parent directory
+                pathlib.Path(pathResourceFolder).mkdir(parents=True, exist_ok=True)
+
             # Set file name
-            filename = dictMediaType['pathParent'] + dictMediaType['pathLevelOne'] + dictMediaType['pathLevelTwo'] + dictMediaType['filenameMedia']
+            filename = pathDirectory + dictMediaType['filenameMedia']
 
             # Set variable
             mediaFilename = pathlib.Path(filename)
 
             # Check if file exists and if file is a file
             if mediaFilename.exists() and mediaFilename.is_file():
-                # Open the file as write
+                # Open file for read and write and to append to end of the file
                 with open(filename, 'a+') as mediaEntryAppend:
                     # Append media entry into file with proper format
                     mediaEntryAppend.write(mediaEntryFixed + '\n')
@@ -567,10 +590,10 @@ class RssFeedRarBgClass:
             # Check media for movie
             if mediaType == 'Movie':
                 # Split movie string to retrieve the proper title
-                mediaEntryFixed = regEx.split('.[0-9]{4}.', mediaEntry)
+                mediaEntryFixed = regEx.split(r'.[0-9]{4}.', mediaEntry)
             elif mediaType == 'Television':
                 # Split television string to retrieve the proper title
-                mediaEntryFixed = regEx.split('.s[0-9]{2,3}', mediaEntry)
+                mediaEntryFixed = regEx.split(r'.s[0-9]{2,3}.|.[0-9]{4}.[0-9]{2}.[0-9]{2}.|.[0-9]{4}.', mediaEntry)
         except Exception as e:
             # Log string
             self._setLogger('Issue spliting ' + mediaType + ' entries: ' + str(e))
@@ -580,6 +603,9 @@ class RssFeedRarBgClass:
 
     # Set Logger
     def _setLogger(self, logString):
+        # Initialize dictionary
+        config_dict = {}
+
         # Create object of rss feed parser rarbg config
         rfrbgconfig = rssfeedrarbgconfig.RssFeedRarBgConfig()
 
@@ -621,7 +647,7 @@ class RssFeedRarBgClass:
         else:
             # Configure basic logging
             #logging.basicConfig(filename=logFilename,level=logging.INFO, format='{"": %(asctime)s, "": %(levelname)s, "": %(levelno)s, "": %(module)s, "": %(pathname)s, "": %(filename)s, "": %(lineno)d, "": %(funcName)s, "": %(message)s}')
-            logging.basicConfig(filename=logFilename,level=logging.DEBUG, format='{"": %(asctime)s, "": %(levelname)s, "": %(levelno)s, "": %(module)s, "": %(pathname)s, "": %(filename)s, "": %(lineno)d, "": %(funcName)s, "": %(message)s}')
+            logging.basicConfig(filename=logFilename,level=logging.DEBUG, format='%(asctime)s - %(levelname)s:%(levelno)s [%(module)s] [%(pathname)s:%(filename)s:%(lineno)d:%(funcName)s] %(message)s')
 
         # Set root logger
         #logger = logging.getLogger('rssfeedrarbginfo')
@@ -638,7 +664,6 @@ class RssFeedRarBgClass:
     def _set_sqlite_pragma(dbapi_connection, connection_record):
         # Check if the connection is a sqlite connection instance
         if isinstance(dbapi_connection, sqlite3.Connection):
-
             # Set the cursor to the connection
             cursor = dbapi_connection.cursor()
 
@@ -683,6 +708,7 @@ class RssFeedRarBgClass:
             if regEx.match(r'SQLite[a-zA-Z]{1,}', type, flags=regEx.IGNORECASE):
                 # Set engine
                 self.engine = sqlalchemy.create_engine(self.Database)
+                #self.engine = sqlalchemy.create_engine(self.Database, echo=True) # for debugging purposes only
 
                 # Connect to engine
                 self.connection = self.engine.connect()
@@ -906,7 +932,7 @@ class RssFeedRarBgClass:
     def _extractRecord(self, dbType, tableName):
         # Open database connection
         self.__dbOpenConnection(dbType)
-        ##HERE
+
         # Set meta data based on engine
         metadata = sqlalchemy.MetaData(self.engine)
 
@@ -914,7 +940,7 @@ class RssFeedRarBgClass:
         mediaTable = sqlalchemy.Table(tableName, metadata, autoload = True, autoload_with = self.engine)
 
         # Set variable query based on short name and action status
-        querySNAS = sqlalchemy.select([mediaTable.c.titlelong, mediaTable.c.titleshort, mediaTable.c.publishdate]).where(sqlalchemy.and_(mediaTable.c.actionstatus == 0))
+        querySNAS = sqlalchemy.select([mediaTable.c.titlelong, mediaTable.c.titleshort, mediaTable.c.publishdate]).where(mediaTable.c.actionstatus == 0)
 
         ## Print query with values
         #print(querySNAS.compile(compile_kwargs={"literal_binds": True}))
