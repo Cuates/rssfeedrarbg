@@ -2,8 +2,8 @@
 #        File: rssfeedrarbgclass.py
 #     Created: 03/17/2019
 #     Updated: 04/20/2019
-#  Programmer: Daniel Ojeda
-#  Updated By: Daniel Ojeda
+#  Programmer: Cuates
+#  Updated By: Cuates
 #     Purpose: RSS feed Rarbg Class
 ##
 
