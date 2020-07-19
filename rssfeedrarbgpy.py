@@ -2,8 +2,8 @@
 #        File: rssfeedrarbg.py
 #     Created: 03/16/2019
 #     Updated: 04/13/2019
-#  Programmer: Guadalupe Ojeda
-#  Updated By: Daniel Ojeda
+#  Programmer: Cuates
+#  Updated By: Cuates
 #     Purpose: Retrieve RSS feed from RarBg site
 #     Version: 0.0.1 Python3
 ##
