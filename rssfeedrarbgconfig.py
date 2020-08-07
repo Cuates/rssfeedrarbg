@@ -1,7 +1,7 @@
 ##
 #        File: rssfeedrarbgconfig.py
 #     Created: 03/17/2019
-#     Updated: 04/13/2019
+#     Updated: 08/06/2020
 #  Programmer: Cuates
 #  Updated By: Cuates
 #     Purpose: RSS feed Rarbg Configuration
