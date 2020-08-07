@@ -118,7 +118,7 @@ class RssFeedRarBgConfig:
     # Set database variable
     def _setDatabaseVars(self, type):
         # Define server information
-        ServerInfo = 'DWC-DEV-INT-01'
+        ServerInfo = 'DEV-SERVER'
 
         # Define list of dev words
         ServerType = ['dev']
