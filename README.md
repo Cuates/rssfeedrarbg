@@ -4,11 +4,8 @@ Python [rarbg](https://rarbg.to/torrents.php) RSS Feed parser for Movies and TVs
 ## Table of Contents
 * [Version](#version)
 * [Important Note](#important-note)
-* [Dependent MSSQL Function](#dependent-mssql-function)
-* [Prerequisite Data Types](#prerequisite-data-types)
-* [Prerequisite Functions](#prerequisite-functions)
-* [Prerequisite Conditions](#prerequisite-conditions)
-* [Usage](#usage)
+* [Prerequisite Python Modules](#prerequisite-python-modules)
+* [Python Modules](#python-modules)
 
 ### Version
 * 0.0.5
