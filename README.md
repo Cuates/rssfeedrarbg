@@ -14,22 +14,26 @@ Python [rarbg](https://rarbg.to/torrents.php) RSS Feed parser for Movies and TVs
 * This script was written with Python 3 methods
 
 ### Prerequisite Python Modules
+* List installed modules
+  * `pip3.9 list`
+* Module version
+  * `pip3.9 show <modulename>`
 * tkinter
-  * `sudo python3 -m pip install tkinter`
+  * `sudo python3.9 -m pip install tkinter`
 * feedparser
-  * `sudo python3 -m pip install feedparser`
+  * `sudo python3.9 -m pip install feedparser`
 * requests
-  * `sudo python3 -m pip install requests`
+  * `sudo python3.9 -m pip install requests`
 * pytz
-  * `sudo python3 -m pip install pytz`
+  * `sudo python3.9 -m pip install pytz`
 * tzlocal
-  * `sudo python3 -m pip install tzlocal`
+  * `sudo python3.9 -m pip install tzlocal`
 * SQLAlchemy
-  * `sudo python3 -m pip install SQLAlchemy`
+  * `sudo python3.9 -m pip install SQLAlchemy`
 
 ### Python Modules
 * **Implemented logic, but commented out of code**
 * beautiful Soup 4
-  * `sudo python3 -m pip install beautifulsoup4`
+  * `sudo python3.9 -m pip install beautifulsoup4`
 * Python JSON Logger
-  * `sudo python3 -m pip install python-json-logger`
+  * `sudo python3.9 -m pip install python-json-logger`
