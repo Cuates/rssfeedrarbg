@@ -1,0 +1,5 @@
+feedparser
+requests
+pytz
+tzlocal
+SQLAlchemy
