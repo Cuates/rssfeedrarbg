@@ -18,6 +18,11 @@ Python [rarbg](https://rarbg.to/torrents.php) RSS Feed parser for Movies and TVs
   * `pip3.9 list`
 * Module version
   * `pip3.9 show <modulename>`
+* Module Outdated
+  * `pip3.9 list --outdated`
+* Module Upgrade
+  * `pip3.9 install --upgrade <modulename>`
+  * `pip3.9 install --upgrade <modulename> <modulename> <modulename>`
 * tkinter
   * `sudo python3.9 -m pip install tkinter`
 * feedparser
