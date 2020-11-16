@@ -40,6 +40,8 @@ Python [rarbg](https://rarbg.to/torrents.php) RSS Feed parser for Movies and TVs
 * SQLAlchemy
   * `pip3.9 install SQLAlchemy`
     * [SQLAlchemy](https://pypi.org/project/SQLAlchemy/)
+* Install module in batch instead of Individual Installation
+  * `pip3.9 install -r /path/to/requirements.txt`
 
 ### Python Modules
 * **Implemented logic, but commented out of code**
