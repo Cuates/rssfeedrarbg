@@ -27,14 +27,19 @@ Python [rarbg](https://rarbg.to/torrents.php) RSS Feed parser for Movies and TVs
   * `pip3.9 install tkinter`
 * feedparser
   * `pip3.9 install feedparser`
+    * [feedparser](https://pypi.org/project/feedparser/)
 * requests
   * `pip3.9 install requests`
+    * [requests](https://pypi.org/project/requests/)
 * pytz
   * `pip3.9 install pytz`
+    * [pytz](https://pypi.org/project/pytz/)
 * tzlocal
   * `pip3.9 install tzlocal`
+    * [tzlocal](https://pypi.org/project/tzlocal/)
 * SQLAlchemy
   * `pip3.9 install SQLAlchemy`
+    * [SQLAlchemy](https://pypi.org/project/SQLAlchemy/)
 
 ### Python Modules
 * **Implemented logic, but commented out of code**
