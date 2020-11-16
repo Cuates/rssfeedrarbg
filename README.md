@@ -24,21 +24,21 @@ Python [rarbg](https://rarbg.to/torrents.php) RSS Feed parser for Movies and TVs
   * `pip3.9 install --upgrade <modulename>`
   * `pip3.9 install --upgrade <modulename> <modulename> <modulename>`
 * tkinter
-  * `sudo python3.9 -m pip install tkinter`
+  * `pip3.9 install tkinter`
 * feedparser
-  * `sudo python3.9 -m pip install feedparser`
+  * `pip3.9 install feedparser`
 * requests
-  * `sudo python3.9 -m pip install requests`
+  * `pip3.9 install requests`
 * pytz
-  * `sudo python3.9 -m pip install pytz`
+  * `pip3.9 install pytz`
 * tzlocal
-  * `sudo python3.9 -m pip install tzlocal`
+  * `pip3.9 install tzlocal`
 * SQLAlchemy
-  * `sudo python3.9 -m pip install SQLAlchemy`
+  * `pip3.9 install SQLAlchemy`
 
 ### Python Modules
 * **Implemented logic, but commented out of code**
 * beautiful Soup 4
-  * `sudo python3.9 -m pip install beautifulsoup4`
+  * `pip3.9 install beautifulsoup4`
 * Python JSON Logger
-  * `sudo python3.9 -m pip install python-json-logger`
+  * `pip3.9 install python-json-logger`
